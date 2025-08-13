@@ -1,0 +1,73 @@
+@import '../../styles/variables';
+
+.home {
+  display: flex;
+  flex-direction: column; 
+  min-height: 100vh;      
+  font-family: $font-family-base;
+  background-color: $color-black;
+
+  &__content {           
+    display: flex;
+    flex: 1;              
+  }
+
+  &__left {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding-left: 10rem;
+
+    .home__logo {
+      width: 400px;
+    }
+  }
+
+  &__right {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    padding-left: $spacing-xl;
+
+    h1 {
+      color: $color-white;
+      margin-bottom: $spacing-lg;
+      font-size: $font-size-xl;
+    }
+
+    .btn {
+      display: block;
+      padding: $spacing-sm $spacing-lg;
+      margin-bottom: $spacing-md;
+      text-decoration: none;
+      font-weight: bold;
+      border-radius: 5px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.3s ease;
+
+      &.btn-primary {
+        background-color: $color-yellow;
+        color: $color-black;
+
+        &:hover {
+          background-color: $color-white;
+          color: $color-black;
+        }
+      }
+
+      &.btn-secondary {
+        background-color: $color-white;
+        color: $color-black;
+
+        &:hover {
+          background-color: $color-yellow;
+          color: $color-black;
+        }
+      }
+    }
+  }
+}

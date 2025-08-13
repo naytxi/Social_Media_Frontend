@@ -1,0 +1,19 @@
+@import '../../styles/variables';
+
+.footer {
+  background-color: $color-black; 
+  color: $color-white;            
+  text-align: center;
+  padding: $spacing-md;
+  font-size: $font-size-sm;
+
+  a {
+    color: $color-white;
+    text-decoration: underline;
+    margin: 0 $spacing-sm;
+
+    &:hover {
+      color: $color-yellow; 
+    }
+  }
+}

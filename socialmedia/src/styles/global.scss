@@ -1,0 +1,20 @@
+@import './variables';
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: $font-family-base;
+  background-color: $color-white;
+  color: $color-black;
+}
+a {
+  text-decoration: none;
+  color: $color-yellow-dark;
+  &:hover {
+    text-decoration: underline;
+  }
+}

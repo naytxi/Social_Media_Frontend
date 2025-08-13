@@ -1,0 +1,65 @@
+@import '../../styles/variables';
+
+.dashboard {
+  font-family: $font-family-base;
+  background-color: $color-gray;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+
+  &__nav {
+    display: flex;
+    justify-content: center;
+    background-color: $color-white;
+    padding: $spacing-md;
+    border-bottom: 1px solid $color-gray;
+
+    &-link {
+      margin: 0 $spacing-lg;
+      text-decoration: none;
+      color: $color-black;
+      font-weight: bold;
+
+      &:hover {
+        color: $color-yellow;
+      }
+    }
+  }
+
+  &__posts {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: $spacing-lg;
+    gap: $spacing-lg;
+  }
+
+  &__post {
+    background-color: $color-white;
+    width: 60%;
+    padding: $spacing-md;
+    border-radius: 8px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    position: relative;
+
+    &-nick {
+      font-weight: bold;
+      margin-bottom: $spacing-sm;
+    }
+
+    &-content {
+      text-align: center;
+      flex: 1;
+      margin: 0 $spacing-md;
+    }
+
+    &-follow {
+      width: 40px;
+      height: 60px;
+      cursor: pointer;
+    }
+  }
+}

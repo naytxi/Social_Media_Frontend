@@ -1,0 +1,62 @@
+@import '../../styles/variables';
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: $spacing-md $spacing-lg;
+  background-color: $color-black;
+  color: $color-white;
+
+  &__left {
+    display: flex;
+    align-items: center;
+
+    .header__logo {
+      width: 80px;
+      height: auto;
+      cursor: pointer;
+    }
+  }
+
+  &__center {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+
+    .header__search {
+      width: 50%;
+      padding: $spacing-sm $spacing-md;
+      border-radius: 20px;
+      border: none;
+      font-size: $font-size-base;
+
+      &:focus {
+        outline: none;
+      }
+    }
+  }
+
+  &__right {
+    display: flex;
+    align-items: center;
+    gap: $spacing-md;
+
+    .header__icon {
+      font-size: 1.5rem;
+      cursor: pointer;
+
+      &:hover {
+        color: $color-yellow;
+      }
+    }
+
+    .header__login {
+      cursor: pointer;
+
+      &:hover {
+        color: $color-yellow;
+      }
+    }
+  }
+}
