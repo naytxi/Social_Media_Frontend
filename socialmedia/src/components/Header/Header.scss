@@ -4,13 +4,14 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: $spacing-md $spacing-lg;
+  padding: $spacing-lg;
   background-color: $color-black;
   color: $color-white;
 
   &__left {
     display: flex;
     align-items: center;
+    margin-left: 20px; 
 
     .header__logo {
       width: 80px;
@@ -20,13 +21,30 @@
   }
 
   &__center {
-    flex: 1;
     display: flex;
+    align-items: center;
+    flex: 1;
     justify-content: center;
+    gap: $spacing-md;
+
+    .header__newpost-btn {
+      background: none;
+      border: none;
+      color: $color-white;
+      font-size: 1.5rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      &:hover {
+        color: $color-yellow;
+      }
+    }
 
     .header__search {
-      width: 50%;
-      padding: $spacing-sm $spacing-md;
+      width: 450px; 
+      padding: $spacing-md;
       border-radius: 20px;
       border: none;
       font-size: $font-size-base;
@@ -41,6 +59,7 @@
     display: flex;
     align-items: center;
     gap: $spacing-md;
+    margin-right: 20px; 
 
     .header__icon {
       font-size: 1.5rem;
