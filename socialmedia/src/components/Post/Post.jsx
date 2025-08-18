@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import "./Post.scss";
 import { useSelector } from "react-redux";
 
-const Post = ({ onClose }) => {
+const Post = ({ onClose, addPostToDashboard }) => {
   const { user } = useSelector((state) => state.user);
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
@@ -23,7 +23,7 @@ const Post = ({ onClose }) => {
 
     try {
       const token = localStorage.getItem("token"); 
-      const response = await fetch("http://localhost:5000/posts", {
+      const response = await fetch("http://localhost:5000/api/posts", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -36,7 +36,7 @@ const Post = ({ onClose }) => {
       if (!response.ok) {
         setError(data.message || "Error al crear el post");
       } else {
-        
+        addPostToDashboard(data.post); 
         onClose();
       }
     } catch (err) {

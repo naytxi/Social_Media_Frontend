@@ -7,24 +7,32 @@
   display: flex;
   flex-direction: column;
 
-  &__nav {
-    display: flex;
-    justify-content: center;
-    background-color: $color-white;
-    padding: $spacing-md;
-    border-bottom: 1px solid $color-gray;
+ &__nav {
+  display: flex;
+  justify-content: center;
+  background-color: $color-white;
+  padding: $spacing-md;
+  border-bottom: 1px solid $color-gray;
 
-    &-link {
-      margin: 0 $spacing-lg;
-      text-decoration: none;
-      color: $color-black;
-      font-weight: bold;
+  &-link {
+    margin: 0 $spacing-lg;
+    text-decoration: none;
+    color: $color-black;
+    font-weight: bold;
+    background-color: $color-white; 
+    border: none;
+    padding: 0.75rem 1.5rem; 
+    font-size: 1.1rem;    
+    padding: $spacing-sm $spacing-md;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.3s ease;
 
-      &:hover {
-        color: $color-yellow;
-      }
+    &:hover {
+      color: $color-yellow; 
     }
   }
+}
 
   &__posts {
     flex: 1;
@@ -41,25 +49,53 @@
     padding: $spacing-md;
     border-radius: 8px;
     display: flex;
+    align-items: flex-start; 
     justify-content: space-between;
-    align-items: flex-start;
+    gap: $spacing-md;
     position: relative;
 
-    &-nick {
+    &-left {
+      flex: 0 0 20%;
       font-weight: bold;
-      margin-bottom: $spacing-sm;
+      display: flex;
+      align-items: flex-start;
     }
 
-    &-content {
-      text-align: center;
+    &-center {
       flex: 1;
-      margin: 0 $spacing-md;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+
+      & .dashboard__post-title {
+        font-weight: bold;
+        margin-bottom: $spacing-xs;
+        font-size: 1.1rem;
+      }
+
+      & .dashboard__post-content {
+        margin-bottom: $spacing-sm;
+      }
+
+      & .dashboard__post-image {
+        width: 100%;
+        margin-top: $spacing-sm;
+        border-radius: 4px;
+      }
     }
 
-    &-follow {
-      width: 40px;
-      height: 60px;
-      cursor: pointer;
+    &-right {
+      flex: 0 0 10%;
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+
+      & .dashboard__post-follow {
+        width: 40px;
+        height: 60px;
+        cursor: pointer;
+      }
     }
   }
 }

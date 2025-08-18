@@ -5,11 +5,13 @@ import { FiMail, FiEdit2 } from "react-icons/fi";
 import { useSelector, useDispatch } from "react-redux";
 import { setUserFromStorage, logout } from "../../features/UserSlice";
 import Post from "../Post/Post";
+import { useNavigate } from "react-router-dom"; 
 
-const Header = () => {
+const Header = ({ addPostToDashboard }) => {
   const { user } = useSelector((state) => state.user);
   const dispatch = useDispatch();
   const [showPostModal, setShowPostModal] = useState(false);
+  const navigate = useNavigate(); 
 
   useEffect(() => {
     dispatch(setUserFromStorage());
@@ -18,7 +20,12 @@ const Header = () => {
   return (
     <header className="header">
       <div className="header__left">
-        <img src={logo} alt="Beely Logo" className="header__logo" />
+        <img 
+          src={logo} 
+          alt="Beely Logo" 
+          className="header__logo" 
+          onClick={() => navigate("/dashboard")}
+        />
       </div>
 
       <div className="header__center">
@@ -41,14 +48,25 @@ const Header = () => {
         <FiMail className="header__icon" />
         {user ? (
           <span className="header__user">
-            {user.name} <button onClick={() => dispatch(logout())}>Salir</button>
+            {user.name} 
+            <button 
+              className="header__logout-btn" 
+              onClick={() => dispatch(logout())}
+            >
+              Salir
+            </button>
           </span>
         ) : (
           <span className="header__login">Login</span>
         )}
       </div>
 
-      {showPostModal && <Post onClose={() => setShowPostModal(false)} />}
+      {showPostModal && (
+        <Post 
+          onClose={() => setShowPostModal(false)} 
+          addPostToDashboard={addPostToDashboard} 
+        />
+      )}
     </header>
   );
 };

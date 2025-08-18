@@ -43,7 +43,7 @@
     }
 
     .header__search {
-      width: 450px; 
+      width: 650px; 
       padding: $spacing-md;
       border-radius: 20px;
       border: none;
@@ -59,7 +59,7 @@
     display: flex;
     align-items: center;
     gap: $spacing-md;
-    margin-right: 20px; 
+    margin-right: 40px; 
 
     .header__icon {
       font-size: 1.5rem;
@@ -75,6 +75,23 @@
 
       &:hover {
         color: $color-yellow;
+      }
+    }
+
+    .header__logout-btn {
+      margin-left: 10px;
+      padding: 5px 12px;
+      border: none;
+      background-color: $color-black;
+      color: $color-white;
+      font-weight: bold;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+
+      &:hover {
+        background-color: $color-yellow;
+        color: $color-black;
       }
     }
   }

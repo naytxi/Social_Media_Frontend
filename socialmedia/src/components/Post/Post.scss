@@ -20,7 +20,7 @@
     width: 400px;
     max-width: 90%;
     text-align: center;
-    position: relative;
+    position: relative; 
 
     h2 {
       margin-bottom: $spacing-md;
@@ -53,7 +53,7 @@
     button {
       background-color: $color-yellow;
       color: $color-black;
-      padding: $spacing-sm $spacing-md;
+      padding: $spacing-sm;
       border: none;
       border-radius: 5px;
       cursor: pointer;
@@ -71,26 +71,26 @@
         cursor: not-allowed;
       }
     }
+  }
 
-    &__close {
-      position: absolute;
-      top: $spacing-sm;
-      right: $spacing-sm;
-      background: none;
-      border: none;
-      font-size: $font-size-xl;
-      color: $color-white;
-      cursor: pointer;
+  &__close {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: none;
+    border: none;
+    font-size: $font-size-xl;
+    color: $color-white;
+    cursor: pointer;
 
-      &:hover {
-        color: $color-yellow;
-      }
+    &:hover {
+      color: $color-yellow;
     }
+  }
 
-    &__error {
-      color: #ff4d4d;
-      margin-bottom: $spacing-sm;
-      font-size: $font-size-sm;
-    }
+  &__error {
+    color: #ff4d4d;
+    margin-bottom: $spacing-sm;
+    font-size: $font-size-sm;
   }
 }
