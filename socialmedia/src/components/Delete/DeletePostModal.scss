@@ -1,0 +1,57 @@
+@import '../../styles/variables';
+
+.delete-post-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: $z-modal;
+
+  &__content {
+    background-color: $color-black;
+    color: $color-white;
+    padding: $spacing-xl;
+    border-radius: 10px;
+    width: 400px;
+    max-width: 90%;
+    text-align: center;
+  }
+
+  &__actions {
+    display: flex;
+    justify-content: space-around;
+    margin-top: $spacing-md;
+
+    button {
+      background-color: $color-yellow;
+      color: $color-black;
+      padding: $spacing-sm $spacing-md;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-family: $font-family-base;
+      font-size: $font-size-base;
+      transition: all 0.2s ease;
+
+      &:hover {
+        background-color: $color-white;
+        color: $color-black;
+      }
+
+      &.cancel {
+        background-color: $color-gray;
+        color: $color-white;
+
+        &:hover {
+          background-color: $color-white;
+          color: $color-black;
+        }
+      }
+    }
+  }
+}

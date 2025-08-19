@@ -1,6 +1,6 @@
 @import '../../styles/variables';
 
-.modal-backdrop {
+.login-modal-backdrop {
   position: fixed;
   top: 0;
   left: 0;
@@ -13,7 +13,7 @@
   z-index: $z-modal;
 }
 
-.modal {
+.login-modal {
   background-color: $color-black;
   color: $color-white;
   padding: $spacing-xl;
@@ -21,12 +21,12 @@
   width: 350px;
   text-align: center;
 
-  .modal__logo {
+  .login-modal__logo {
     width: 100px;
     margin-bottom: $spacing-xs;
   }
 
-      h2 {
+  h2 {
     margin-bottom: $spacing-md; 
   }
 
@@ -38,7 +38,7 @@
     border: 1px solid $color-gray;
   }
 
-  .modal__buttons {
+  .login-modal__buttons {
     display: flex;
     justify-content: space-between;
 
@@ -73,5 +73,10 @@
         color: $color-black;
       }
     }
+  }
+
+  .login-modal__error {
+    color: #ff4d4d;
+    margin-bottom: $spacing-sm;
   }
 }

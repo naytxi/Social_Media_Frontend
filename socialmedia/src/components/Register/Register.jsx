@@ -35,9 +35,9 @@ const Register = ({ onClose }) => {
   };
 
   return (
-    <div className="modal-backdrop">
-      <div className="modal">
-        <img src={logo} alt="Beely Logo" className="modal__logo" />
+    <div className="register-modal-backdrop">
+      <div className="register-modal">
+        <img src={logo} alt="Beely Logo" className="register-modal__logo" />
         <h2>Crear cuenta</h2>
 
         <form onSubmit={handleSubmit}>
@@ -74,8 +74,8 @@ const Register = ({ onClose }) => {
             required
           />
 
-          {error && <p className="error">{error}</p>}
-          <div className="modal__buttons">
+          {error && <p className="register-modal__error">{error}</p>}
+          <div className="register-modal__buttons">
             <button type="submit" className="btn btn-register" disabled={loading}>
               {loading ? "Registrando..." : "Crear cuenta"}
             </button>

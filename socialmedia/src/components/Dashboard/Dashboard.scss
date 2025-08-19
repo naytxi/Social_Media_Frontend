@@ -7,32 +7,31 @@
   display: flex;
   flex-direction: column;
 
- &__nav {
-  display: flex;
-  justify-content: center;
-  background-color: $color-white;
-  padding: $spacing-md;
-  border-bottom: 1px solid $color-gray;
+  &__nav {
+    display: flex;
+    justify-content: center;
+    background-color: $color-white;
+    padding: $spacing-md;
+    border-bottom: 1px solid $color-gray;
 
-  &-link {
-    margin: 0 $spacing-lg;
-    text-decoration: none;
-    color: $color-black;
-    font-weight: bold;
-    background-color: $color-white; 
-    border: none;
-    padding: 0.75rem 1.5rem; 
-    font-size: 1.1rem;    
-    padding: $spacing-sm $spacing-md;
-    border-radius: 4px;
-    cursor: pointer;
-    transition: all 0.3s ease;
+    &-link {
+      margin: 0 $spacing-lg;
+      text-decoration: none;
+      color: $color-black;
+      font-weight: bold;
+      background-color: $color-white;
+      border: none;
+      padding: $spacing-sm $spacing-md;
+      font-size: 1.1rem;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: all 0.3s ease;
 
-    &:hover {
-      color: $color-yellow; 
+      &:hover {
+        color: $color-yellow;
+      }
     }
   }
-}
 
   &__posts {
     flex: 1;
@@ -49,7 +48,7 @@
     padding: $spacing-md;
     border-radius: 8px;
     display: flex;
-    align-items: flex-start; 
+    align-items: flex-start;
     justify-content: space-between;
     gap: $spacing-md;
     position: relative;
@@ -68,17 +67,17 @@
       align-items: center;
       text-align: center;
 
-      & .dashboard__post-title {
+      .dashboard__post-title {
         font-weight: bold;
         margin-bottom: $spacing-xs;
         font-size: 1.1rem;
       }
 
-      & .dashboard__post-content {
+      .dashboard__post-content {
         margin-bottom: $spacing-sm;
       }
 
-      & .dashboard__post-image {
+      .dashboard__post-image {
         width: 100%;
         margin-top: $spacing-sm;
         border-radius: 4px;
@@ -88,14 +87,84 @@
     &-right {
       flex: 0 0 10%;
       display: flex;
-      justify-content: flex-end;
+      flex-direction: column;
       align-items: center;
 
-      & .dashboard__post-follow {
+      .dashboard__post-follow {
         width: 40px;
         height: 60px;
         cursor: pointer;
+        transition: transform 0.2s ease;
+
+        &.liked {
+          transform: scale(1.2);
+          filter: drop-shadow(0 0 5px $color-yellow);
+        }
+      }
+
+      .dashboard__post-likes {
+        margin-top: $spacing-xs;
+        font-size: 0.8rem;
+        color: $color-black;
+        font-weight: bold;
       }
     }
+  }
+
+  &__post-actions {
+    margin-left: 30px; 
+    display: flex;
+    gap: 12px;
+    font-size: 1.4rem;
+
+    .dashboard__icon {
+      cursor: pointer;
+      color: $color-black;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+
+      svg {
+        display: block;
+      }
+
+      &.edit:hover {
+        color: $color-yellow;
+        transform: scale(1.2);
+      }
+
+      &.delete:hover {
+        color: $color-yellow;
+        transform: scale(1.2);
+      }
+    }
+  }
+}
+
+.modal {
+  position: fixed;
+  top: 0; 
+  left: 0;
+  width: 100%; 
+  height: 100%;
+  background: rgba(0,0,0,0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  &-content {
+    background: $color-white;
+    padding: 1.5rem;
+    border-radius: 8px;
+    width: 400px;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  &-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem;
   }
 }

@@ -14,22 +14,18 @@ const Login = ({ onClose }) => {
   const [password, setPassword] = useState("");
 
   const handleLogin = async () => {
-    
     const result = await dispatch(loginUser({ email, password }));
-
     if (result.meta.requestStatus === "fulfilled") {
-      
       localStorage.setItem("token", result.payload.token);
-
       onClose();
       navigate("/dashboard");
     }
   };
 
   return (
-    <div className="modal-backdrop">
-      <div className="modal">
-        <img src={logo} alt="Beely Logo" className="modal__logo" />
+    <div className="login-modal-backdrop">
+      <div className="login-modal">
+        <img src={logo} alt="Beely Logo" className="login-modal__logo" />
         <h2>Iniciar sesión</h2>
         <input
           type="email"
@@ -43,8 +39,8 @@ const Login = ({ onClose }) => {
           value={password}
           onChange={(e) => setPassword(e.target.value)}
         />
-        {error && <p className="modal__error">{error}</p>}
-        <div className="modal__buttons">
+        {error && <p className="login-modal__error">{error}</p>}
+        <div className="login-modal__buttons">
           <button
             className="btn btn-login"
             onClick={handleLogin}
