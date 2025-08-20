@@ -78,6 +78,26 @@
       }
     }
 
+    .header__user {
+      display: flex;
+      align-items: center;
+      gap: $spacing-sm;
+
+      &-btn {
+        background: none;
+        border: none;
+        color: $color-white;
+        font-size: $font-size-base;
+        font-weight: bold;
+        cursor: pointer;
+        transition: all 0.3s ease;
+
+        &:hover {
+          color: $color-yellow;
+        }
+      }
+    }
+
     .header__logout-btn {
       margin-left: 10px;
       padding: 5px 12px;

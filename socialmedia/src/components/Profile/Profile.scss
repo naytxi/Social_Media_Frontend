@@ -1,0 +1,103 @@
+@import '../../styles/variables';
+
+.profile {
+  font-family: $font-family-base;
+  background-color: $color-gray;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+
+  &__content {
+    flex: 1;
+    padding: $spacing-lg;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: $spacing-lg;
+  }
+
+  &__info {
+    background-color: $color-white;
+    width: 60%;
+    padding: $spacing-md;
+    border-radius: 8px;
+    text-align: center;
+
+    h2 {
+      font-size: $font-size-xl;
+      margin-bottom: $spacing-sm;
+    }
+
+    p {
+      margin: $spacing-xs 0;
+      color: $color-black;
+    }
+  }
+
+  &__posts {
+    width: 60%;
+    display: flex;
+    flex-direction: column;
+    gap: $spacing-lg;
+  }
+
+  &__month {
+    background-color: $color-white;
+    padding: $spacing-md;
+    border-radius: 8px;
+  }
+
+  &__month-toggle {
+    width: 100%;
+    text-align: left;
+    padding: $spacing-sm $spacing-md;
+    background: $color-black;
+    color: $color-white;
+    border: none;
+    font-weight: bold;
+    cursor: pointer;
+    border-radius: 6px;
+    transition: background 0.3s ease, color 0.3s ease;
+
+    &:hover {
+      background: $color-yellow;
+      color: $color-black;
+    }
+  }
+
+  &__posts-list {
+    margin-top: $spacing-md;
+    padding-left: $spacing-md;
+    border-left: 3px solid $color-yellow;
+    display: flex;
+    flex-direction: column;
+    gap: $spacing-md;
+    max-height: 1000px;
+    overflow: hidden;
+    transition: max-height 0.4s ease-in-out;
+  }
+
+  &__post {
+    background-color: $color-white;
+    padding: $spacing-md;
+    border-radius: 8px;
+    border: 1px solid $color-gray;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+
+    &-title {
+      font-weight: bold;
+      margin-bottom: $spacing-xs;
+      font-size: 1.1rem;
+    }
+
+    &-content {
+      margin-bottom: $spacing-sm;
+    }
+
+    &-image {
+      width: 100%;
+      margin-top: $spacing-sm;
+      border-radius: 4px;
+    }
+  }
+}
