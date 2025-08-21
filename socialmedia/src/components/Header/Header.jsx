@@ -23,7 +23,6 @@ const Header = ({ addPostToDashboard, onSearch }) => {
     navigate("/");
   };
 
-  // 🔎 Handler del buscador
   const handleSearchChange = (e) => {
     const value = e.target.value;
     setSearchTerm(value);
@@ -52,7 +51,7 @@ const Header = ({ addPostToDashboard, onSearch }) => {
         )}
         <input
           type="text"
-          placeholder="Buscar usuarios o zumbidos..."
+          placeholder="Buscar abejitas o zumbidos..."
           className="header__search"
           value={searchTerm}
           onChange={handleSearchChange}

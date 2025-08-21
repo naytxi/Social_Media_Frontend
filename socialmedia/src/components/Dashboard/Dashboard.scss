@@ -82,6 +82,21 @@
         margin-top: $spacing-sm;
         border-radius: 4px;
       }
+
+      .dashboard__comment-btn {
+        margin-top: 10px;
+        background: none;
+        border: none;
+        color: $color-black;
+        cursor: pointer;
+        font-size: 0.9rem;
+        font-weight: bold;
+        text-align: center;
+
+        &:hover {
+          color: $color-yellow;
+        }
+      }
     }
 
     &-right {

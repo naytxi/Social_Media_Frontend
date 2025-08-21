@@ -3,6 +3,7 @@ import Header from "../Header/Header";
 import Footer from "../Footer/Footer";
 import EditPostModal from "../Edit/EditPostModal";
 import DeletePostModal from "../Delete/DeletePostModal";
+import Comments from "../Comments/Comments"; 
 import logo from "../../assets/logo2.png";
 import "./Dashboard.scss";
 
@@ -13,6 +14,7 @@ const Dashboard = () => {
   const [showMyPosts, setShowMyPosts] = useState(false);
   const [editingPost, setEditingPost] = useState(null);
   const [deletingPost, setDeletingPost] = useState(null);
+  const [openComments, setOpenComments] = useState({}); 
 
   const addPostToDashboard = (newPost) => {
     setPosts((prev) => [newPost, ...prev]);
@@ -180,7 +182,6 @@ const Dashboard = () => {
               <div className="dashboard__post" key={post._id}>
                 <div className="dashboard__post-left">
                   {post.author?.name || "@Anónimo"}
-
                   {post.author?._id === userId && (
                     <div className="dashboard__post-actions">
                       <span
@@ -223,6 +224,25 @@ const Dashboard = () => {
                       src={post.image}
                       alt="Imagen del post"
                       className="dashboard__post-image"
+                    />
+                  )}
+
+                  <button
+                    className="dashboard__comment-btn"
+                    onClick={() =>
+                      setOpenComments((prev) => ({
+                        ...prev,
+                        [post._id]: !prev[post._id],
+                      }))
+                    }
+                  >
+                    {openComments[post._id] ? "Ocultar comentarios" : "Comentar"}
+                  </button>
+
+                  {openComments[post._id] && (
+                    <Comments
+                      postId={post._id}
+                      token={localStorage.getItem("token")}
                     />
                   )}
                 </div>
