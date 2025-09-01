@@ -154,6 +154,23 @@
       }
     }
   }
+  
+  .dashboard__user-result {
+  margin-bottom: $spacing-md;
+
+  .dashboard__user-link {
+    font-size: 1.5rem; 
+    font-weight: bold;
+    color: $color-black;
+    text-decoration: none;
+    transition: color 0.3s ease;
+
+    &:hover {
+      color: $color-yellow;
+    }
+  }
+}
+
 }
 
 .modal {

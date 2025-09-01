@@ -16,6 +16,7 @@ function App() {
           element={user ? <Dashboard /> : <Navigate to="/" />}
         />
         <Route path="/profile" element={<Profile />} />
+         <Route path="/profile/:id" element={<Profile />} />
       </Routes>
     </Router>
   );

@@ -81,7 +81,7 @@ const Dashboard = () => {
   const toggleLike = async (postId, alreadyLiked) => {
     try {
       const token = localStorage.getItem("token");
-      if (!token) throw new Error("Debes iniciar sesión para dar zumbidos");
+      if (!token) throw new Error("Debes iniciar sesión para dar abejitas");
 
       const endpoint = alreadyLiked
         ? `http://localhost:5000/api/posts/${postId}/unlike`
@@ -94,7 +94,7 @@ const Dashboard = () => {
           "Content-Type": "application/json",
         },
       });
-      if (!res.ok) throw new Error("Error al dar/quitar zumbido");
+      if (!res.ok) throw new Error("Error al dar/quitar abejita");
 
       const data = await res.json();
       setPosts((prev) =>
@@ -138,10 +138,11 @@ const Dashboard = () => {
 
       const userResults = usersData.users.map((u) => ({
         _id: `user-${u._id}`,
+        type: "user",
         title: `@${u.name}`,
-        content: "Usuario encontrado",
         author: u,
         likes: [],
+        link: `/profile/${u._id}`,
       }));
 
       setPosts([...userResults, ...postsData.posts]);
@@ -176,6 +177,16 @@ const Dashboard = () => {
         {!loading &&
           !error &&
           posts.map((post) => {
+
+            if (post.type === "user") {
+        return (
+              <div className="dashboard__user-result" key={post._id}>
+              <a href={post.link} className="dashboard__user-link">
+              {post.title}
+              </a>
+              </div>
+                )}; 
+
             const alreadyLiked = post.likes?.includes(userId);
 
             return (
