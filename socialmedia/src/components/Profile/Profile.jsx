@@ -49,12 +49,11 @@ const Profile = () => {
       const dataUser = await resUser.json();
       setUser(dataUser.user);
 
-      // 2️⃣ Cargar posts del usuario
       let posts = [];
       if (isOwnProfile) {
         posts = dataUser.user?.posts || [];
       } else {
-        
+
      const resPosts = await fetch(
          `http://localhost:5000/api/users/${id}/posts`,
              { headers: { Authorization: `Bearer ${token}` } }
