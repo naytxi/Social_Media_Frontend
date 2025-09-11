@@ -7,6 +7,15 @@
   display: flex;
   flex-direction: column;
 
+  &__profile-pic {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-bottom: $spacing-md;
+    border: 3px solid $color-yellow;
+  }
+
   &__content {
     flex: 1;
     padding: $spacing-lg;

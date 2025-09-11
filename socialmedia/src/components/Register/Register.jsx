@@ -15,21 +15,32 @@ const Register = ({ onClose }) => {
     email: "",
     password: "",
     age: "",
+    profilePic: null,
   });
 
   const handleChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value,
-    });
+    const { name, value, files } = e.target;
+    if (name === "profilePic") {
+      setFormData({ ...formData, profilePic: files[0] });
+    } else {
+      setFormData({ ...formData, [name]: value });
+    }
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    dispatch(registerUser(formData)).then((res) => {
+
+    const data = new FormData();
+    data.append("name", formData.name);
+    data.append("email", formData.email);
+    data.append("password", formData.password);
+    data.append("age", formData.age);
+    if (formData.profilePic) data.append("profilePic", formData.profilePic);
+
+    dispatch(registerUser(data)).then((res) => {
       if (!res.error) {
-        onClose();       
-        navigate("/dashboard"); 
+        onClose();
+        navigate("/dashboard");
       }
     });
   };
@@ -40,7 +51,7 @@ const Register = ({ onClose }) => {
         <img src={logo} alt="Beely Logo" className="register-modal__logo" />
         <h2>Crear cuenta</h2>
 
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit} encType="multipart/form-data">
           <input
             type="text"
             name="name"
@@ -73,8 +84,15 @@ const Register = ({ onClose }) => {
             onChange={handleChange}
             required
           />
+          <input
+            type="file"
+            name="profilePic"
+            accept="image/*"
+            onChange={handleChange}
+          />
 
           {error && <p className="register-modal__error">{error}</p>}
+
           <div className="register-modal__buttons">
             <button type="submit" className="btn btn-register" disabled={loading}>
               {loading ? "Registrando..." : "Crear cuenta"}

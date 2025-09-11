@@ -26,11 +26,12 @@ const Header = ({ addPostToDashboard, onSearch }) => {
   const handleSearchChange = (e) => {
     const value = e.target.value;
     setSearchTerm(value);
-    onSearch(value); 
+    onSearch(value);
   };
 
   return (
     <header className="header">
+ 
       <div className="header__left">
         <img
           src={logo}
@@ -62,6 +63,13 @@ const Header = ({ addPostToDashboard, onSearch }) => {
         <FiMail className="header__icon" />
         {user ? (
           <div className="header__user">
+            {user.profilePic && (
+              <img
+                src={`http://localhost:5000${user.profilePic}`}
+                alt="Foto de perfil"
+                className="header__profile-pic"
+              />
+            )}
             <button
               className="header__user-btn"
               onClick={() => navigate("/profile")}

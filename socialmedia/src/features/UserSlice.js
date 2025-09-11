@@ -5,15 +5,24 @@ const API_URL = "http://localhost:5000/api/users";
 
 export const registerUser = createAsyncThunk(
   "user/register",
-  async (userData, { rejectWithValue }) => {
+  async (formData, { rejectWithValue }) => {
     try {
-      const response = await axios.post(API_URL, userData);
-      return response.data.user; 
+      const response = await axios.post(`${API_URL}/register`, formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+
+      localStorage.setItem("user", JSON.stringify(response.data.user));
+      return response.data.user;
     } catch (error) {
-      return rejectWithValue(error.response.data.message || "Error al registrar");
+      return rejectWithValue(
+        error.response?.data?.message || "Error al registrar"
+      );
     }
   }
 );
+
 
 export const loginUser = createAsyncThunk(
   "user/login",
@@ -29,13 +38,46 @@ export const loginUser = createAsyncThunk(
       });
 
       const user = { ...profileRes.data.user, token };
+      localStorage.setItem("user", JSON.stringify(user));
+
       return user;
     } catch (error) {
-      return rejectWithValue(error.response?.data?.message || "Error al iniciar sesión");
+      return rejectWithValue(
+        error.response?.data?.message || "Error al iniciar sesión"
+      );
     }
   }
 );
 
+
+export const updateProfilePic = createAsyncThunk(
+  "user/updateProfilePic",
+  async (file, { rejectWithValue }) => {
+    try {
+      const token = localStorage.getItem("token");
+      const formData = new FormData();
+      formData.append("profilePic", file);
+
+      const response = await axios.post(`${API_URL}/profile-pic`, formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      const user = JSON.parse(localStorage.getItem("user")) || {};
+      user.profilePic = response.data.profilePic;
+      localStorage.setItem("user", JSON.stringify(user));
+
+      return response.data.profilePic;
+    } catch (error) {
+      return rejectWithValue(
+        error.response?.data?.message ||
+          "Error al actualizar la foto de perfil"
+      );
+    }
+  }
+);
 
 const userSlice = createSlice({
   name: "user",
@@ -48,6 +90,7 @@ const userSlice = createSlice({
     logout: (state) => {
       state.user = null;
       localStorage.removeItem("user");
+      localStorage.removeItem("token");
     },
     setUserFromStorage: (state) => {
       const storedUser = localStorage.getItem("user");
@@ -56,7 +99,21 @@ const userSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
+     
+      .addCase(registerUser.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(registerUser.fulfilled, (state, action) => {
+        state.loading = false;
+        state.user = action.payload;
+      })
+      .addCase(registerUser.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
 
+     
       .addCase(loginUser.pending, (state) => {
         state.loading = true;
         state.error = null;
@@ -64,9 +121,24 @@ const userSlice = createSlice({
       .addCase(loginUser.fulfilled, (state, action) => {
         state.loading = false;
         state.user = action.payload;
-        localStorage.setItem("user", JSON.stringify(action.payload));
       })
       .addCase(loginUser.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+
+
+      .addCase(updateProfilePic.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(updateProfilePic.fulfilled, (state, action) => {
+        state.loading = false;
+        if (state.user) {
+          state.user.profilePic = action.payload; 
+        }
+      })
+      .addCase(updateProfilePic.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       });

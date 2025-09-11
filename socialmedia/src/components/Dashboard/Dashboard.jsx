@@ -16,6 +16,19 @@ const Dashboard = () => {
   const [deletingPost, setDeletingPost] = useState(null);
   const [openComments, setOpenComments] = useState({}); 
 
+  const fakeUsers = [
+    { id: 1, name: "🐝 nano" },
+    { id: 2, name: "🐝 Guti" },
+    { id: 3, name: "🐝 Olatz" },
+    { id: 4, name: "🐝 tina" },
+  ];
+
+  const fakeAds = [
+    { id: 1, text: "🔥 Compra miel 100% natural al mejor precio" },
+    { id: 2, text: "🐝 Únete a nuestra colmena premium" },
+    { id: 3, text: "🍯 Recetas con miel que te sorprenderán" },
+  ];
+
   const addPostToDashboard = (newPost) => {
     setPosts((prev) => [newPost, ...prev]);
   };
@@ -167,109 +180,132 @@ const Dashboard = () => {
         </button>
       </nav>
 
-      <div className="dashboard__posts">
-        {loading && <p>Cargando posts...</p>}
-        {error && <p style={{ color: "red" }}>{error}</p>}
-        {!loading && !error && posts.length === 0 && (
-          <p>{showMyPosts ? "No tienes zumbidos todavía 🐝" : "No hay posts todavía 🐝"}</p>
-        )}
-
-        {!loading &&
-          !error &&
-          posts.map((post) => {
-
-            if (post.type === "user") {
-        return (
-              <div className="dashboard__user-result" key={post._id}>
-              <a href={post.link} className="dashboard__user-link">
-              {post.title}
-              </a>
+      <div className="dashboard__layout">
+      
+        <aside className="dashboard__sidebar dashboard__sidebar--users">
+          <h3>Usuarios registrados</h3>
+          <div className="dashboard__users-container">
+            {fakeUsers.map((u) => (
+              <div key={u.id} className="dashboard__user-link">
+                {u.name}
               </div>
-                )}; 
+            ))}
+          </div>
+        </aside>
 
-            const alreadyLiked = post.likes?.includes(userId);
+   
+        <main className="dashboard__posts">
+          {loading && <p>Cargando posts...</p>}
+          {error && <p style={{ color: "red" }}>{error}</p>}
+          {!loading && !error && posts.length === 0 && (
+            <p>{showMyPosts ? "No tienes zumbidos todavía 🐝" : "No hay posts todavía 🐝"}</p>
+          )}
 
-            return (
-              <div className="dashboard__post" key={post._id}>
-                <div className="dashboard__post-left">
-                  {post.author?.name || "@Anónimo"}
-                  {post.author?._id === userId && (
-                    <div className="dashboard__post-actions">
-                      <span
-                        className="dashboard__icon edit"
-                        onClick={() => setEditingPost(post)}
-                      >
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          width="18"
-                          height="18"
-                          viewBox="0 0 24 24"
-                          fill="currentColor"
+          {!loading &&
+            !error &&
+            posts.map((post) => {
+              if (post.type === "user") {
+                return (
+                  <div className="dashboard__user-result" key={post._id}>
+                    <a href={post.link} className="dashboard__user-link">
+                      {post.title}
+                    </a>
+                  </div>
+                );
+              }
+
+              const alreadyLiked = post.likes?.includes(userId);
+
+              return (
+                <div className="dashboard__post" key={post._id}>
+                  <div className="dashboard__post-left">
+                    {post.author?.name || "@Anónimo"}
+                    {post.author?._id === userId && (
+                      <div className="dashboard__post-actions">
+                        <span
+                          className="dashboard__icon edit"
+                          onClick={() => setEditingPost(post)}
                         >
-                          <path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM21.41 6.34a1 1 0 0 0 0-1.41l-2.34-2.34a1 1 0 0 0-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z" />
-                        </svg>
-                      </span>
-                      <span
-                        className="dashboard__icon delete"
-                        onClick={() => setDeletingPost(post)}
-                      >
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          width="18"
-                          height="18"
-                          viewBox="0 0 24 24"
-                          fill="currentColor"
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            width="18"
+                            height="18"
+                            viewBox="0 0 24 24"
+                            fill="currentColor"
+                          >
+                            <path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM21.41 6.34a1 1 0 0 0 0-1.41l-2.34-2.34a1 1 0 0 0-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z" />
+                          </svg>
+                        </span>
+                        <span
+                          className="dashboard__icon delete"
+                          onClick={() => setDeletingPost(post)}
                         >
-                          <path d="M16 9v10H8V9h8m-1.5-6h-5l-1 1H5v2h14V4h-4.5l-1-1z" />
-                        </svg>
-                      </span>
-                    </div>
-                  )}
-                </div>
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            width="18"
+                            height="18"
+                            viewBox="0 0 24 24"
+                            fill="currentColor"
+                          >
+                            <path d="M16 9v10H8V9h8m-1.5-6h-5l-1 1H5v2h14V4h-4.5l-1-1z" />
+                          </svg>
+                        </span>
+                      </div>
+                    )}
+                  </div>
 
-                <div className="dashboard__post-center">
-                  <div className="dashboard__post-title">{post.title}</div>
-                  <div className="dashboard__post-content">{post.content}</div>
-                  {post.image && (
+                  <div className="dashboard__post-center">
+                    <div className="dashboard__post-title">{post.title}</div>
+                    <div className="dashboard__post-content">{post.content}</div>
+                    {post.image && (
+                      <img
+                        src={post.image}
+                        alt="Imagen del post"
+                        className="dashboard__post-image"
+                      />
+                    )}
+
+                    <button
+                      className="dashboard__comment-btn"
+                      onClick={() =>
+                        setOpenComments((prev) => ({ ...prev, [post._id]: !prev[post._id] }))
+                      }
+                    >
+                      {openComments[post._id] ? "Ocultar comentarios" : " Ver Comentarios"}
+                    </button>
+
+                    {openComments[post._id] && (
+                      <Comments
+                        postId={post._id}
+                        token={localStorage.getItem("token")}
+                      />
+                    )}
+                  </div>
+
+                  <div className="dashboard__post-right">
                     <img
-                      src={post.image}
-                      alt="Imagen del post"
-                      className="dashboard__post-image"
+                      src={logo}
+                      alt="Like"
+                      className={`dashboard__post-follow ${alreadyLiked ? "liked" : ""}`}
+                      onClick={() => toggleLike(post._id, alreadyLiked)}
                     />
-                  )}
-
-                  <button
-                    className="dashboard__comment-btn"
-                    onClick={() =>
-                      setOpenComments((prev) => ({
-                        ...prev,
-                        [post._id]: !prev[post._id],
-                      }))
-                    }
-                  >
-                    {openComments[post._id] ? "Ocultar comentarios" : "Comentar"}
-                  </button>
-
-                  {openComments[post._id] && (
-                    <Comments
-                      postId={post._id}
-                      token={localStorage.getItem("token")}
-                    />
-                  )}
+                    <div className="dashboard__post-likes">{post.likes?.length || 0}</div>
+                  </div>
                 </div>
+              );
+            })}
+        </main>
 
-                <div className="dashboard__post-right">
-                  <img
-                    src={logo}
-                    alt="Like"
-                    className={`dashboard__post-follow ${alreadyLiked ? "liked" : ""}`}
-                    onClick={() => toggleLike(post._id, alreadyLiked)}
-                  />
-                  <div className="dashboard__post-likes">{post.likes?.length || 0}</div>
-                </div>
+        <aside className="dashboard__sidebar dashboard__sidebar--ads">
+          <h3>Publicidad</h3>
+          <div className="dashboard__ads-container">
+            {fakeAds.map((ad) => (
+              <div key={ad.id} className="dashboard__ad-item">
+                {ad.text}
               </div>
-            );
-          })}
+            ))}
+          </div>
+        </aside>
       </div>
 
       {editingPost && (

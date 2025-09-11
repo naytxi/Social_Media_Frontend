@@ -5,7 +5,7 @@ import { useParams } from "react-router-dom";
 import "./Profile.scss";
 
 const Profile = () => {
-  const { id } = useParams(); 
+  const { id } = useParams();
   const [user, setUser] = useState(null);
   const [groupedPosts, setGroupedPosts] = useState({});
   const [loading, setLoading] = useState(true);
@@ -20,14 +20,15 @@ const Profile = () => {
       return null;
     }
   };
-  
+
   const userId = getUserId();
-  const isOwnProfile = !id || id === userId; 
+  const isOwnProfile = !id || id === userId;
 
   useEffect(() => {
     loadProfile();
-  }, [id]); 
+  }, [id]);
 
+ 
   const loadProfile = async () => {
     setLoading(true);
     setError(null);
@@ -36,6 +37,7 @@ const Profile = () => {
       const token = localStorage.getItem("token");
       if (!token) throw new Error("No se encontró token en localStorage");
 
+      
       const endpointUser = id
         ? `http://localhost:5000/api/users/${id}`
         : `http://localhost:5000/api/users/me`;
@@ -53,11 +55,10 @@ const Profile = () => {
       if (isOwnProfile) {
         posts = dataUser.user?.posts || [];
       } else {
-
-     const resPosts = await fetch(
-         `http://localhost:5000/api/users/${id}/posts`,
-             { headers: { Authorization: `Bearer ${token}` } }
-              );
+        const resPosts = await fetch(
+          `http://localhost:5000/api/users/${id}/posts`,
+          { headers: { Authorization: `Bearer ${token}` } }
+        );
 
         if (!resPosts.ok) throw new Error("Error al cargar los zumbidos del usuario");
 
@@ -65,16 +66,18 @@ const Profile = () => {
         posts = dataPosts.posts || [];
       }
 
+      
       const grouped = posts.reduce((acc, post) => {
         const date = new Date(post.createdAt);
-        const key = `${date.toLocaleString("default", { month: "long" })} ${date.getFullYear()}`;
+        const key = `${date.toLocaleString("default", {
+          month: "long",
+        })} ${date.getFullYear()}`;
         if (!acc[key]) acc[key] = [];
         acc[key].push(post);
         return acc;
       }, {});
 
       setGroupedPosts(grouped);
-
     } catch (err) {
       setError(err.message);
       setGroupedPosts({});
@@ -97,7 +100,15 @@ const Profile = () => {
 
         {!loading && user && (
           <>
+        
             <div className="profile__info">
+              {user.profilePic && (
+                <img
+                  src={`http://localhost:5000${user.profilePic}`}
+                  alt="Foto de perfil"
+                  className="profile__profile-pic"
+                />
+              )}
               <h2>{user.name}</h2>
               {isOwnProfile && <p>Email: {user.email}</p>}
               <p>Seguidores: {user.followersCount}</p>
@@ -131,7 +142,9 @@ const Profile = () => {
                       {posts.map((post) => (
                         <div className="profile__post" key={post._id}>
                           <div className="profile__post-title">{post.title}</div>
-                          <div className="profile__post-content">{post.content}</div>
+                          <div className="profile__post-content">
+                            {post.content}
+                          </div>
                           {post.image && (
                             <img
                               src={post.image}
