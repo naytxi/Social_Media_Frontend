@@ -9,6 +9,12 @@ const Home = () => {
   const [showLogin, setShowLogin] = useState(false);
   const [showRegister, setShowRegister] = useState(false);
 
+  const openLogin = () => setShowLogin(true);
+  const closeLogin = () => setShowLogin(false);
+
+  const openRegister = () => setShowRegister(true);
+  const closeRegister = () => setShowRegister(false);
+
   return (
     <div className="home">
       <div className="home__content">
@@ -18,16 +24,10 @@ const Home = () => {
 
         <div className="home__right">
           <h1>Bienvenido a Beely 🐝</h1>
-          <button
-            className="btn btn-primary"
-            onClick={() => setShowLogin(true)}
-          >
+          <button className="btn btn-primary" onClick={openLogin}>
             Iniciar sesión
           </button>
-          <button
-            className="btn btn-secondary"
-            onClick={() => setShowRegister(true)}
-          >
+          <button className="btn btn-secondary" onClick={openRegister}>
             Crear cuenta
           </button>
         </div>
@@ -35,8 +35,19 @@ const Home = () => {
 
       <Footer />
 
-      {showLogin && <Login onClose={() => setShowLogin(false)} />}
-      {showRegister && <Register onClose={() => setShowRegister(false)} />}
+      {/* Login modal */}
+      {showLogin && <Login onClose={closeLogin} />}
+
+      {/* Register modal */}
+      {showRegister && (
+        <Register
+          onClose={closeRegister}
+          openLoginModal={() => {
+            closeRegister(); 
+            openLogin();     
+          }}
+        />
+      )}
     </div>
   );
 };

@@ -3,11 +3,9 @@ import "./Register.scss";
 import logo from "../../assets/logo3.png";
 import { useDispatch, useSelector } from "react-redux";
 import { registerUser } from "../../features/UserSlice";
-import { useNavigate } from "react-router-dom";
 
-const Register = ({ onClose }) => {
+const Register = ({ onClose, openLoginModal }) => { 
   const dispatch = useDispatch();
-  const navigate = useNavigate();
   const { loading, error } = useSelector((state) => state.user);
 
   const [formData, setFormData] = useState({
@@ -39,8 +37,8 @@ const Register = ({ onClose }) => {
 
     dispatch(registerUser(data)).then((res) => {
       if (!res.error) {
-        onClose();
-        navigate("/dashboard");
+        onClose(); 
+        openLoginModal(); 
       }
     });
   };
