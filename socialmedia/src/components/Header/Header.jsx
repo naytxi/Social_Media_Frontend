@@ -6,6 +6,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { setUserFromStorage, logout } from "../../features/UserSlice";
 import Post from "../Post/Post";
 import { useNavigate } from "react-router-dom";
+import { getFullImageUrl } from "../../features/getFullImageUrl";
 
 const Header = ({ addPostToDashboard, onSearch }) => {
   const { user } = useSelector((state) => state.user);
@@ -26,12 +27,13 @@ const Header = ({ addPostToDashboard, onSearch }) => {
   const handleSearchChange = (e) => {
     const value = e.target.value;
     setSearchTerm(value);
-    onSearch(value);
+    if (onSearch) onSearch(value);
   };
+
+  const profileUrl = getFullImageUrl(user?.profilePic);
 
   return (
     <header className="header">
- 
       <div className="header__left">
         <img
           src={logo}
@@ -63,9 +65,9 @@ const Header = ({ addPostToDashboard, onSearch }) => {
         <FiMail className="header__icon" />
         {user ? (
           <div className="header__user">
-            {user.profilePic && (
+            {profileUrl && (
               <img
-                src={`http://localhost:5000${user.profilePic}`}
+                src={profileUrl}
                 alt="Foto de perfil"
                 className="header__profile-pic"
               />

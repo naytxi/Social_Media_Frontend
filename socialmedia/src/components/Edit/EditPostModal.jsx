@@ -5,16 +5,18 @@ const EditPostModal = ({ post, onClose, onSave }) => {
   const [title, setTitle] = useState(post.title);
   const [content, setContent] = useState(post.content);
 
+  const API_URL = import.meta.env.VITE_API_URL;
+
   const handleSave = async () => {
     try {
       const token = localStorage.getItem("token");
-      const res = await fetch(`http://localhost:5000/api/posts/${post._id}`, {
+      const res = await fetch(`${API_URL}/posts/${post._id}`, {
         method: "PUT",
         headers: {
-          "Authorization": `Bearer ${token}`,
-          "Content-Type": "application/json"
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
         },
-        body: JSON.stringify({ title, content })
+        body: JSON.stringify({ title, content }),
       });
       if (!res.ok) throw new Error("Error al actualizar el zumbido");
       const data = await res.json();
@@ -28,17 +30,19 @@ const EditPostModal = ({ post, onClose, onSave }) => {
     <div className="edit-post-modal">
       <div className="edit-post-modal__content">
         <h2>Editar Zumbido</h2>
-        <input 
-          type="text" 
-          value={title} 
-          onChange={(e) => setTitle(e.target.value)} 
+        <input
+          type="text"
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
         />
-        <textarea 
-          value={content} 
-          onChange={(e) => setContent(e.target.value)} 
+        <textarea
+          value={content}
+          onChange={(e) => setContent(e.target.value)}
         />
         <div className="edit-post-modal__actions">
-          <button  className="cancel" onClick={onClose}>Cancelar</button>
+          <button className="cancel" onClick={onClose}>
+            Cancelar
+          </button>
           <button onClick={handleSave}>Guardar</button>
         </div>
       </div>

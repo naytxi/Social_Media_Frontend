@@ -35,10 +35,8 @@ const Home = () => {
 
       <Footer />
 
-      {/* Login modal */}
       {showLogin && <Login onClose={closeLogin} />}
 
-      {/* Register modal */}
       {showRegister && (
         <Register
           onClose={closeRegister}

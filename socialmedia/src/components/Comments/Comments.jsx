@@ -8,6 +8,8 @@ const Comments = ({ postId, token }) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
+  
+  const API_URL = import.meta.env.VITE_API_URL + "/posts";
 
   const fetchComments = async () => {
     if (!postId) return;
@@ -15,11 +17,10 @@ const Comments = ({ postId, token }) => {
     setError(null);
 
     try {
-      const res = await axios.get(
-        `http://localhost:5000/api/posts/${postId}/comments`,
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
-     
+      const res = await axios.get(`${API_URL}/${postId}/comments`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+
       const sortedComments = res.data.sort(
         (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
       );
@@ -34,10 +35,9 @@ const Comments = ({ postId, token }) => {
 
   useEffect(() => {
     fetchComments();
-    const interval = setInterval(fetchComments, 10000); 
+    const interval = setInterval(fetchComments, 10000);
     return () => clearInterval(interval);
   }, [postId, token]);
-
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -45,11 +45,11 @@ const Comments = ({ postId, token }) => {
 
     try {
       const res = await axios.post(
-        `http://localhost:5000/api/posts/${postId}/comments`,
+        `${API_URL}/${postId}/comments`,
         { content },
         { headers: { Authorization: `Bearer ${token}` } }
       );
-    
+
       setComments((prev) => [res.data, ...prev]);
       setContent("");
     } catch (err) {

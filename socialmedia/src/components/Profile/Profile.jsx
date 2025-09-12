@@ -1,16 +1,22 @@
 import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import Header from "../Header/Header";
 import Footer from "../Footer/Footer";
 import { useParams } from "react-router-dom";
+import { fetchUserPosts } from "../../features/PostSlice"; 
+import { getFullImageUrl } from "../../features/getFullImageUrl";
 import "./Profile.scss";
 
 const Profile = () => {
   const { id } = useParams();
+  const dispatch = useDispatch();
+  const { list: posts, loading, error } = useSelector((state) => state.posts);
+
   const [user, setUser] = useState(null);
   const [groupedPosts, setGroupedPosts] = useState({});
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
   const [openMonth, setOpenMonth] = useState(null);
+
+  const API_URL = import.meta.env.VITE_API_URL;
 
   const getUserId = () => {
     try {
@@ -28,67 +34,45 @@ const Profile = () => {
     loadProfile();
   }, [id]);
 
- 
-  const loadProfile = async () => {
-    setLoading(true);
-    setError(null);
-
-    try {
-      const token = localStorage.getItem("token");
-      if (!token) throw new Error("No se encontró token en localStorage");
-
-      
-      const endpointUser = id
-        ? `http://localhost:5000/api/users/${id}`
-        : `http://localhost:5000/api/users/me`;
-
-      const resUser = await fetch(endpointUser, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-
-      if (!resUser.ok) throw new Error("Error al obtener el perfil");
-
-      const dataUser = await resUser.json();
-      setUser(dataUser.user);
-
-      let posts = [];
-      if (isOwnProfile) {
-        posts = dataUser.user?.posts || [];
-      } else {
-        const resPosts = await fetch(
-          `http://localhost:5000/api/users/${id}/posts`,
-          { headers: { Authorization: `Bearer ${token}` } }
-        );
-
-        if (!resPosts.ok) throw new Error("Error al cargar los zumbidos del usuario");
-
-        const dataPosts = await resPosts.json();
-        posts = dataPosts.posts || [];
-      }
-
-      
+  useEffect(() => {
+    if (posts.length > 0) {
       const grouped = posts.reduce((acc, post) => {
         const date = new Date(post.createdAt);
-        const key = `${date.toLocaleString("default", {
-          month: "long",
-        })} ${date.getFullYear()}`;
+        const key = `${date.toLocaleString("default", { month: "long" })} ${date.getFullYear()}`;
         if (!acc[key]) acc[key] = [];
         acc[key].push(post);
         return acc;
       }, {});
-
       setGroupedPosts(grouped);
-    } catch (err) {
-      setError(err.message);
+    } else {
       setGroupedPosts({});
-    } finally {
-      setLoading(false);
+    }
+  }, [posts]);
+
+  const loadProfile = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) throw new Error("No se encontró token en localStorage");
+
+      const endpointUser = id ? `${API_URL}/users/${id}` : `${API_URL}/users/me`;
+      const resUser = await fetch(endpointUser, { headers: { Authorization: `Bearer ${token}` } });
+      if (!resUser.ok) throw new Error("Error al obtener el perfil");
+      const dataUser = await resUser.json();
+      setUser(dataUser.user);
+
+      dispatch(fetchUserPosts(id || "me"));
+    } catch (err) {
+      console.error(err);
+      setUser(null);
+      setGroupedPosts({});
     }
   };
 
   const toggleMonth = (month) => {
     setOpenMonth(openMonth === month ? null : month);
   };
+
+  const profileUrl = getFullImageUrl(user?.profilePic);
 
   return (
     <div className="profile">
@@ -100,11 +84,10 @@ const Profile = () => {
 
         {!loading && user && (
           <>
-        
             <div className="profile__info">
-              {user.profilePic && (
+              {profileUrl && (
                 <img
-                  src={`http://localhost:5000${user.profilePic}`}
+                  src={profileUrl}
                   alt="Foto de perfil"
                   className="profile__profile-pic"
                 />
@@ -139,21 +122,22 @@ const Profile = () => {
 
                   {openMonth === month && (
                     <div className="profile__posts-list">
-                      {posts.map((post) => (
-                        <div className="profile__post" key={post._id}>
-                          <div className="profile__post-title">{post.title}</div>
-                          <div className="profile__post-content">
-                            {post.content}
+                      {posts.map((post) => {
+                        const postImageUrl = getFullImageUrl(post.image);
+                        return (
+                          <div className="profile__post" key={post._id}>
+                            <div className="profile__post-title">{post.title}</div>
+                            <div className="profile__post-content">{post.content}</div>
+                            {postImageUrl && (
+                              <img
+                                src={postImageUrl}
+                                alt="Imagen del post"
+                                className="profile__post-image"
+                              />
+                            )}
                           </div>
-                          {post.image && (
-                            <img
-                              src={post.image}
-                              alt="Imagen del post"
-                              className="profile__post-image"
-                            />
-                          )}
-                        </div>
-                      ))}
+                        );
+                      })}
                     </div>
                   )}
                 </div>

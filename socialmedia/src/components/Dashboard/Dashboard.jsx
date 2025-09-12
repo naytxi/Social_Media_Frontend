@@ -1,122 +1,35 @@
 import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import Header from "../Header/Header";
 import Footer from "../Footer/Footer";
 import EditPostModal from "../Edit/EditPostModal";
 import DeletePostModal from "../Delete/DeletePostModal";
-import Comments from "../Comments/Comments"; 
-import logo from "../../assets/logo2.png";
+import Comments from "../Comments/Comments";
+import Post from "../Post/Post";
+import beeIcon from "../../assets/logo2.png";
+import {
+  loadAllPosts,
+  loadMyPosts,
+  toggleLike,
+  addPost,
+  updatePost,
+  deletePost,
+} from "../../features/PostSlice";
+import axios from "axios";
 import "./Dashboard.scss";
 
 const Dashboard = () => {
-  const [posts, setPosts] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-  const [showMyPosts, setShowMyPosts] = useState(false);
+  const dispatch = useDispatch();
+  const { list: posts, loading, error, showMyPosts } = useSelector(
+    (state) => state.posts
+  );
+
+  const [users, setUsers] = useState([]);
   const [editingPost, setEditingPost] = useState(null);
   const [deletingPost, setDeletingPost] = useState(null);
-  const [openComments, setOpenComments] = useState({}); 
-
-  const fakeUsers = [
-    { id: 1, name: "🐝 nano" },
-    { id: 2, name: "🐝 Guti" },
-    { id: 3, name: "🐝 Olatz" },
-    { id: 4, name: "🐝 tina" },
-  ];
-
-  const fakeAds = [
-    { id: 1, text: "🔥 Compra miel 100% natural al mejor precio" },
-    { id: 2, text: "🐝 Únete a nuestra colmena premium" },
-    { id: 3, text: "🍯 Recetas con miel que te sorprenderán" },
-  ];
-
-  const addPostToDashboard = (newPost) => {
-    setPosts((prev) => [newPost, ...prev]);
-  };
-
-  useEffect(() => {
-    loadAllPosts();
-  }, []);
-
-  const loadAllPosts = async () => {
-    setLoading(true);
-    setError(null);
-    try {
-      const res = await fetch("http://localhost:5000/api/posts", {
-        headers: { "Content-Type": "application/json" },
-      });
-      if (!res.ok) throw new Error("Error al cargar los posts");
-
-      const data = await res.json();
-      setPosts(data.posts);
-      setShowMyPosts(false);
-    } catch (err) {
-      setError(err.message);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const loadMyPosts = async () => {
-    setLoading(true);
-    setError(null);
-    try {
-      const token = localStorage.getItem("token");
-      if (!token) throw new Error("Debes iniciar sesión");
-
-      const res = await fetch("http://localhost:5000/api/posts/mine", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-        },
-      });
-
-      if (!res.ok) {
-        const errorData = await res.json();
-        throw new Error(errorData.message || "Error al cargar tus zumbidos");
-      }
-
-      const data = await res.json();
-      const sanitizedPosts = data.posts.map((p) => ({
-        ...p,
-        author: p.author || { _id: null, name: "@Anónimo" },
-      }));
-
-      setPosts(sanitizedPosts);
-      setShowMyPosts(true);
-    } catch (err) {
-      setError(err.message);
-      setPosts([]);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const toggleLike = async (postId, alreadyLiked) => {
-    try {
-      const token = localStorage.getItem("token");
-      if (!token) throw new Error("Debes iniciar sesión para dar abejitas");
-
-      const endpoint = alreadyLiked
-        ? `http://localhost:5000/api/posts/${postId}/unlike`
-        : `http://localhost:5000/api/posts/${postId}/like`;
-
-      const res = await fetch(endpoint, {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-        },
-      });
-      if (!res.ok) throw new Error("Error al dar/quitar abejita");
-
-      const data = await res.json();
-      setPosts((prev) =>
-        prev.map((p) => (p._id === postId ? data.post : p))
-      );
-    } catch (err) {
-      alert(err.message);
-    }
-  };
+  const [openComments, setOpenComments] = useState({});
+  const [showPostModal, setShowPostModal] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
 
   const getUserId = () => {
     try {
@@ -126,94 +39,98 @@ const Dashboard = () => {
       return null;
     }
   };
-
   const userId = getUserId();
 
-  const handleSearch = async (term) => {
-    if (!term) {
-      loadAllPosts();
-      return;
-    }
+  const API_URL = import.meta.env.VITE_API_URL;
 
-    setLoading(true);
-    setError(null);
+  useEffect(() => {
+    dispatch(loadAllPosts());
+    fetchUsers();
+  }, [dispatch]);
 
+  const fetchUsers = async () => {
     try {
-      const [usersRes, postsRes] = await Promise.all([
-        fetch(`http://localhost:5000/api/users/search?name=${term}`),
-        fetch(`http://localhost:5000/api/posts/search?title=${term}`),
-      ]);
-
-      if (!usersRes.ok || !postsRes.ok) throw new Error("Error en la búsqueda");
-
-      const usersData = await usersRes.json();
-      const postsData = await postsRes.json();
-
-      const userResults = usersData.users.map((u) => ({
-        _id: `user-${u._id}`,
-        type: "user",
-        title: `@${u.name}`,
-        author: u,
-        likes: [],
-        link: `/profile/${u._id}`,
-      }));
-
-      setPosts([...userResults, ...postsData.posts]);
+      const token = localStorage.getItem("token");
+      const res = await axios.get(`${API_URL}/users/search?name=`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      setUsers(res.data.users || []);
     } catch (err) {
-      setError(err.message);
-      setPosts([]);
-    } finally {
-      setLoading(false);
+      console.error("Error fetching users:", err);
+      setUsers([]);
     }
   };
 
+  const handleToggleLike = (postId, alreadyLiked) => {
+    dispatch(toggleLike({ postId, alreadyLiked }));
+  };
+
+  const handleAddPost = (post) => {
+    dispatch(addPost(post));
+  };
+
+  const handleSearch = (term) => {
+    setSearchTerm(term);
+  };
+
+  const filteredUsers = users.filter((u) =>
+    u.name.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+  const filteredPosts = posts.filter(
+    (p) =>
+      p.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      p.content.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
   return (
     <div className="dashboard">
-      <Header addPostToDashboard={addPostToDashboard} onSearch={handleSearch} />
+      <Header addPostToDashboard={() => setShowPostModal(true)} onSearch={handleSearch} />
 
       <nav className="dashboard__nav">
-        <button className="dashboard__nav-link" onClick={loadMyPosts}>
+        <button
+          className="dashboard__nav-link"
+          onClick={() => dispatch(loadMyPosts())}
+        >
           Tus Zumbidos
         </button>
-        <button className="dashboard__nav-link" onClick={loadAllPosts}>
+        <button
+          className="dashboard__nav-link"
+          onClick={() => dispatch(loadAllPosts())}
+        >
           Seguidos
         </button>
       </nav>
 
       <div className="dashboard__layout">
-      
         <aside className="dashboard__sidebar dashboard__sidebar--users">
           <h3>Usuarios registrados</h3>
           <div className="dashboard__users-container">
-            {fakeUsers.map((u) => (
-              <div key={u.id} className="dashboard__user-link">
-                {u.name}
-              </div>
-            ))}
+            {filteredUsers.length > 0 ? (
+              filteredUsers.map((u) => (
+                <div key={u._id || u.id} className="dashboard__user-link">
+                  {u.name}
+                </div>
+              ))
+            ) : (
+              <p>No hay usuarios que coincidan 🐝</p>
+            )}
           </div>
         </aside>
 
-   
         <main className="dashboard__posts">
           {loading && <p>Cargando posts...</p>}
           {error && <p style={{ color: "red" }}>{error}</p>}
-          {!loading && !error && posts.length === 0 && (
-            <p>{showMyPosts ? "No tienes zumbidos todavía 🐝" : "No hay posts todavía 🐝"}</p>
+          {!loading && !error && filteredPosts.length === 0 && (
+            <p>
+              {showMyPosts
+                ? "No tienes zumbidos todavía 🐝"
+                : "No hay posts que coincidan con la búsqueda 🐝"}
+            </p>
           )}
 
           {!loading &&
             !error &&
-            posts.map((post) => {
-              if (post.type === "user") {
-                return (
-                  <div className="dashboard__user-result" key={post._id}>
-                    <a href={post.link} className="dashboard__user-link">
-                      {post.title}
-                    </a>
-                  </div>
-                );
-              }
-
+            filteredPosts.map((post) => {
               const alreadyLiked = post.likes?.includes(userId);
 
               return (
@@ -236,6 +153,7 @@ const Dashboard = () => {
                             <path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM21.41 6.34a1 1 0 0 0 0-1.41l-2.34-2.34a1 1 0 0 0-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z" />
                           </svg>
                         </span>
+
                         <span
                           className="dashboard__icon delete"
                           onClick={() => setDeletingPost(post)}
@@ -268,28 +186,32 @@ const Dashboard = () => {
                     <button
                       className="dashboard__comment-btn"
                       onClick={() =>
-                        setOpenComments((prev) => ({ ...prev, [post._id]: !prev[post._id] }))
+                        setOpenComments((prev) => ({
+                          ...prev,
+                          [post._id]: !prev[post._id],
+                        }))
                       }
                     >
-                      {openComments[post._id] ? "Ocultar comentarios" : " Ver Comentarios"}
+                      {openComments[post._id]
+                        ? "Ocultar comentarios"
+                        : " Ver Comentarios"}
                     </button>
 
-                    {openComments[post._id] && (
-                      <Comments
-                        postId={post._id}
-                        token={localStorage.getItem("token")}
-                      />
-                    )}
+                    {openComments[post._id] && <Comments postId={post._id} />}
                   </div>
 
                   <div className="dashboard__post-right">
                     <img
-                      src={logo}
+                      src={beeIcon}
                       alt="Like"
-                      className={`dashboard__post-follow ${alreadyLiked ? "liked" : ""}`}
-                      onClick={() => toggleLike(post._id, alreadyLiked)}
+                      className={`dashboard__post-follow ${
+                        alreadyLiked ? "liked" : ""
+                      }`}
+                      onClick={() => handleToggleLike(post._id, alreadyLiked)}
                     />
-                    <div className="dashboard__post-likes">{post.likes?.length || 0}</div>
+                    <div className="dashboard__post-likes">
+                      {post.likes?.length || 0}
+                    </div>
                   </div>
                 </div>
               );
@@ -299,23 +221,26 @@ const Dashboard = () => {
         <aside className="dashboard__sidebar dashboard__sidebar--ads">
           <h3>Publicidad</h3>
           <div className="dashboard__ads-container">
-            {fakeAds.map((ad) => (
-              <div key={ad.id} className="dashboard__ad-item">
-                {ad.text}
-              </div>
-            ))}
+            <div>🔥 Compra miel 100% natural al mejor precio</div>
+            <div>🐝 Únete a nuestra colmena premium</div>
+            <div>🍯 Recetas con miel que te sorprenderán</div>
           </div>
         </aside>
       </div>
+
+      {showPostModal && (
+        <Post
+          onClose={() => setShowPostModal(false)}
+          addPostToDashboard={handleAddPost}
+        />
+      )}
 
       {editingPost && (
         <EditPostModal
           post={editingPost}
           onClose={() => setEditingPost(null)}
           onSave={(updatedPost) => {
-            setPosts((prev) =>
-              prev.map((p) => (p._id === updatedPost._id ? updatedPost : p))
-            );
+            dispatch(updatePost(updatedPost));
             setEditingPost(null);
           }}
         />
@@ -326,7 +251,7 @@ const Dashboard = () => {
           post={deletingPost}
           onClose={() => setDeletingPost(null)}
           onDelete={() => {
-            setPosts((prev) => prev.filter((p) => p._id !== deletingPost._id));
+            dispatch(deletePost(deletingPost._id));
             setDeletingPost(null);
           }}
         />

@@ -62,7 +62,10 @@
       flex-direction: column;
       gap: 8px; 
       max-height: 250px; 
-      overflow-y: auto; 
+      overflow-y: auto;    
+      overflow-y: auto;        
+      min-width: 200px;        
+      flex-shrink: 0;         
 
       .dashboard__users-container,
       .dashboard__ads-container {

@@ -1,9 +1,13 @@
 import React, { useState } from "react";
 import "./Post.scss";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+import { addPost as addPostAction } from "../../features/PostSlice";
+import * as postService from "../../features/PostService";
 
-const Post = ({ onClose, addPostToDashboard }) => {
+const Post = ({ onClose }) => {
   const { user } = useSelector((state) => state.user);
+  const dispatch = useDispatch();
+
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [image, setImage] = useState("");
@@ -22,25 +26,16 @@ const Post = ({ onClose, addPostToDashboard }) => {
     }
 
     try {
-      const token = localStorage.getItem("token"); 
-      const response = await fetch("http://localhost:5000/api/posts", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({ title, content, image }),
-      });
+      const token = localStorage.getItem("token");
+      if (!token) throw new Error("Debes iniciar sesión");
 
-      const data = await response.json();
-      if (!response.ok) {
-        setError(data.message || "Error al crear el post");
-      } else {
-        addPostToDashboard(data.post); 
-        onClose();
-      }
+      const newPost = await postService.createPost({ title, content, image }, token);
+
+      dispatch(addPostAction(newPost));
+
+      onClose();
     } catch (err) {
-      setError("Error al conectar con el servidor");
+      setError(err.message || "Error al crear el post");
     } finally {
       setLoading(false);
     }
@@ -67,7 +62,7 @@ const Post = ({ onClose, addPostToDashboard }) => {
             value={content}
             onChange={(e) => setContent(e.target.value)}
             required
-          ></textarea>
+          />
           <input
             type="text"
             placeholder="URL de imagen (opcional)"
