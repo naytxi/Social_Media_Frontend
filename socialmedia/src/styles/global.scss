@@ -10,11 +10,53 @@ body {
   font-family: $font-family-base;
   background-color: $color-white;
   color: $color-black;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
+
 a {
   text-decoration: none;
   color: $color-yellow-dark;
+  transition: color 0.3s ease;
+
   &:hover {
     text-decoration: underline;
+    color: $color-yellow;
   }
+}
+
+
+h1, h2, h3, h4, h5, h6 {
+  line-height: 1.2;
+  margin-bottom: 1rem;
+}
+
+p {
+  margin-bottom: 1rem;
+}
+
+
+img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+
+input, textarea, button, select {
+  font-family: inherit;
+  font-size: inherit;
+}
+
+@media (max-width: 1024px) {
+  body { font-size: 0.95rem; }
+}
+
+@media (max-width: 768px) {
+  body { font-size: 0.9rem; }
+}
+
+@media (max-width: 480px) {
+  body { font-size: 0.85rem; }
 }

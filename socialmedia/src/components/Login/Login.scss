@@ -19,6 +19,7 @@
   padding: $spacing-xl;
   border-radius: 10px;
   width: 350px;
+  max-width: 90%;
   text-align: center;
 
   .login-modal__logo {
@@ -28,6 +29,7 @@
 
   h2 {
     margin-bottom: $spacing-md; 
+    font-size: 1.5rem;
   }
 
   input {
@@ -36,21 +38,29 @@
     margin-bottom: $spacing-md;
     border-radius: 5px;
     border: 1px solid $color-gray;
+    font-size: 0.95rem;
   }
 
   .login-modal__buttons {
     display: flex;
+    flex-wrap: wrap;
+    gap: $spacing-sm;
     justify-content: space-between;
 
-    .btn-login {
-      background-color: $color-yellow;
-      color: $color-black;
-      flex: 1;
-      margin-right: $spacing-sm;
+    .btn-login,
+    .btn-cancel {
+      flex: 1 1 48%;
       padding: $spacing-sm;
       border: none;
       border-radius: 5px;
       cursor: pointer;
+      font-size: 0.95rem;
+      transition: all 0.2s ease;
+    }
+
+    .btn-login {
+      background-color: $color-yellow;
+      color: $color-black;
 
       &:hover {
         background-color: $color-white;
@@ -61,12 +71,6 @@
     .btn-cancel {
       background-color: $color-gray;
       color: $color-white;
-      flex: 1;
-      margin-left: $spacing-sm;
-      padding: $spacing-sm;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
 
       &:hover {
         background-color: $color-yellow;
@@ -78,5 +82,24 @@
   .login-modal__error {
     color: #ff4d4d;
     margin-bottom: $spacing-sm;
+    font-size: 0.9rem;
+  }
+
+  @media (max-width: 480px) {
+    padding: $spacing-md;
+
+    h2 {
+      font-size: 1.3rem;
+    }
+
+    .login-modal__buttons {
+      flex-direction: column;
+
+      .btn-login,
+      .btn-cancel {
+        flex: 1 1 100%;
+        margin: 5px 0;
+      }
+    }
   }
 }

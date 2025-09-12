@@ -20,11 +20,11 @@
     width: 400px;
     max-width: 90%;
     text-align: center;
-    position: relative; 
+    position: relative;
 
     h2 {
       margin-bottom: $spacing-md;
-      font-size: $font-size-xl;
+      font-size: 1.5rem;
     }
 
     input,
@@ -35,7 +35,7 @@
       border-radius: 5px;
       border: 1px solid $color-gray;
       font-family: $font-family-base;
-      font-size: $font-size-base;
+      font-size: 0.95rem;
       background-color: $color-black;
       color: $color-white;
 
@@ -51,6 +51,7 @@
     }
 
     button {
+      width: 100%;
       background-color: $color-yellow;
       color: $color-black;
       padding: $spacing-sm;
@@ -58,7 +59,7 @@
       border-radius: 5px;
       cursor: pointer;
       font-family: $font-family-base;
-      font-size: $font-size-base;
+      font-size: 0.95rem;
       transition: all 0.2s ease;
 
       &:hover {
@@ -79,7 +80,7 @@
     right: 10px;
     background: none;
     border: none;
-    font-size: $font-size-xl;
+    font-size: 1.5rem;
     color: $color-white;
     cursor: pointer;
 
@@ -91,6 +92,26 @@
   &__error {
     color: #ff4d4d;
     margin-bottom: $spacing-sm;
-    font-size: $font-size-sm;
+    font-size: 0.9rem;
+  }
+
+  @media (max-width: 480px) {
+    &__content {
+      padding: $spacing-md;
+
+      h2 {
+        font-size: 1.3rem;
+      }
+
+      input,
+      textarea {
+        font-size: 0.9rem;
+      }
+
+      button {
+        font-size: 0.9rem;
+        padding: $spacing-sm;
+      }
+    }
   }
 }

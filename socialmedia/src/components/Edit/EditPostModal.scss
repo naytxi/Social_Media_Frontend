@@ -11,6 +11,7 @@
   justify-content: center;
   align-items: center;
   z-index: $z-modal;
+  padding: 1rem;
 
   &__content {
     background-color: $color-black;
@@ -20,6 +21,14 @@
     width: 400px;
     max-width: 90%;
     text-align: center;
+    display: flex;
+    flex-direction: column;
+
+    @media (max-width: 600px) {
+      width: 100%;
+      padding: $spacing-lg;
+      font-size: 0.95rem;
+    }
   }
 
   input,
@@ -38,17 +47,31 @@
       outline: none;
       border-color: $color-yellow;
     }
+
+    @media (max-width: 600px) {
+      font-size: 0.9rem;
+      padding: $spacing-xs $spacing-sm;
+    }
   }
 
   textarea {
     resize: vertical;
     min-height: 80px;
+
+    @media (max-width: 600px) {
+      min-height: 60px;
+    }
   }
 
   &__actions {
     display: flex;
     justify-content: space-between;
     margin-top: $spacing-md;
+    gap: 1rem;
+
+    @media (max-width: 600px) {
+      flex-direction: column;
+    }
 
     button {
       background-color: $color-yellow;
@@ -66,15 +89,24 @@
         color: $color-black;
       }
 
-      
       &.cancel {
         background-color: $color-gray;
         color: $color-white;
+
+        &:hover {
+          background-color: $color-white;
+          color: $color-black;
+        }
       }
 
       &:disabled {
         background-color: $color-gray;
         cursor: not-allowed;
+      }
+
+      @media (max-width: 600px) {
+        width: 100%;
+        font-size: 0.9rem;
       }
     }
   }
