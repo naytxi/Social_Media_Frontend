@@ -44,9 +44,6 @@ const Post = ({ onClose }) => {
   return (
     <div className="post-modal">
       <div className="post-modal__content">
-        <button className="post-modal__close" onClick={onClose}>
-          &times;
-        </button>
         <h2>Crear un nuevo Zumbido</h2>
         {error && <p className="post-modal__error">{error}</p>}
         <form onSubmit={handleSubmit}>
@@ -72,6 +69,9 @@ const Post = ({ onClose }) => {
           <button type="submit" disabled={loading}>
             {loading ? "Publicando..." : "Publicar"}
           </button>
+           <button className="post-modal__close" onClick={onClose}>
+          &times;
+        </button>
         </form>
       </div>
     </div>

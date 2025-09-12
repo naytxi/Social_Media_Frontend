@@ -42,15 +42,16 @@
     .header__newpost-btn {
       background: none;
       border: none;
-      color: $color-white;
-      font-size: 1.5rem;
+      color: $color-yellow;
+      font-size: 6rem; 
       cursor: pointer;
       display: flex;
       align-items: center;
       justify-content: center;
+      flex-shrink: 0; 
 
       &:hover {
-        color: $color-yellow;
+        color: $color-white;
       }
     }
 
@@ -142,12 +143,18 @@
     }
 
     &__center {
-      justify-content: center; 
+      justify-content: flex-start; 
       gap: $spacing-sm;
       width: 100%;
+      flex-wrap: nowrap; 
+      align-items: center;
+
+      .header__newpost-btn {
+        font-size: 5rem; 
+      }
 
       .header__search {
-        width: 100%;
+        flex: 1; 
       }
     }
 
@@ -162,16 +169,21 @@
   @media (max-width: 480px) {
     &__left {
       .header__logo {
-        width: 60px;
+        width: 70px;
       }
     }
 
     &__center {
-      flex-direction: column;
+      flex-direction: row; 
       gap: $spacing-xs;
+      align-items: center;
 
       .header__newpost-btn {
-        font-size: 1.2rem;
+        font-size: 4.5rem;
+      }
+
+      .header__search {
+        flex: 1;
       }
     }
 
