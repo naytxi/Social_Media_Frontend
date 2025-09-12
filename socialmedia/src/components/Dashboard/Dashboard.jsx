@@ -197,7 +197,9 @@ const Dashboard = () => {
                         : " Ver Comentarios"}
                     </button>
 
-                    {openComments[post._id] && <Comments postId={post._id} />}
+                    {openComments[post._id] && (
+  <Comments postId={post._id} token={localStorage.getItem("token")} />
+)}
                   </div>
 
                   <div className="dashboard__post-right">

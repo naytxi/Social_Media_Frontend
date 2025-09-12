@@ -2,32 +2,40 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import "./comments.scss";
 
-const Comments = ({ postId, token }) => {
+const Comments = ({ postId, token: tokenProp }) => {
   const [comments, setComments] = useState([]);
   const [content, setContent] = useState("");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  
   const API_URL = import.meta.env.VITE_API_URL + "/posts";
+
+  const getToken = () => tokenProp || localStorage.getItem("token");
 
   const fetchComments = async () => {
     if (!postId) return;
     setLoading(true);
     setError(null);
 
+    const token = getToken();
+    const headers = token ? { Authorization: `Bearer ${token}` } : {};
+
     try {
       const res = await axios.get(`${API_URL}/${postId}/comments`, {
-        headers: { Authorization: `Bearer ${token}` },
+        headers,
       });
 
-      const sortedComments = res.data.sort(
+      const data = res.data?.comments ?? res.data;
+      const sortedComments = (data || []).sort(
         (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
       );
       setComments(sortedComments);
     } catch (err) {
       console.error("Error al obtener comentarios", err);
-      setError("No se pudieron cargar los comentarios");
+      setError(
+        err.response?.data?.message ||
+          "No se pudieron cargar los comentarios"
+      );
     } finally {
       setLoading(false);
     }
@@ -37,11 +45,17 @@ const Comments = ({ postId, token }) => {
     fetchComments();
     const interval = setInterval(fetchComments, 10000);
     return () => clearInterval(interval);
-  }, [postId, token]);
+  }, [postId, tokenProp]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!content.trim()) return;
+
+    const token = getToken();
+    if (!token) {
+      setError("Debes iniciar sesión para comentar");
+      return;
+    }
 
     try {
       const res = await axios.post(
@@ -50,11 +64,17 @@ const Comments = ({ postId, token }) => {
         { headers: { Authorization: `Bearer ${token}` } }
       );
 
-      setComments((prev) => [res.data, ...prev]);
+      const newComment = res.data?.comment ?? res.data;
+      setComments((prev) => [newComment, ...prev]);
       setContent("");
+      setError(null);
     } catch (err) {
       console.error("Error al crear comentario", err);
-      setError("No se pudo enviar el comentario");
+      if (err.response?.status === 401) {
+        setError("No autorizado. Inicia sesión de nuevo.");
+      } else {
+        setError("No se pudo enviar el comentario");
+      }
     }
   };
 
@@ -84,7 +104,7 @@ const Comments = ({ postId, token }) => {
             <p className="comments__empty">Sé el primero en comentar</p>
           ) : (
             comments.map((c) => (
-              <div key={c._id} className="comments__item">
+              <div key={c._id || c.id} className="comments__item">
                 <span className="comments__author">
                   {c.author?.name || c.author?.username || "Usuario"}
                 </span>
