@@ -74,7 +74,7 @@ npm install
 3. Ejecutar el servidor:
 
 ```bash
-npm start
+npm run dev
 ```
 
 > Asegúrate de tener el backend corriendo en `http://localhost:5000`
